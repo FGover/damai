@@ -28,27 +28,33 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料 
+ * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料
  * @description: 购票人 service
  * @author: 阿星不是程序员
  **/
 @Service
 public class TicketUserService extends ServiceImpl<TicketUserMapper, TicketUser> {
-    
+
     @Autowired
     private TicketUserMapper ticketUserMapper;
-    
+
     @Autowired
     private UserMapper userMapper;
-    
+
     @Autowired
     private UidGenerator uidGenerator;
-    
+
     @Autowired
     private RedisCache redisCache;
-    
+
+    /**
+     * 根据用户id查询购票人集合
+     *
+     * @param ticketUserListDto
+     * @return
+     */
     public List<TicketUserVo> list(TicketUserListDto ticketUserListDto) {
-        //先从缓存中查询
+        // 先从缓存中查询
         List<TicketUserVo> ticketUserVoList = redisCache.getValueIsList(RedisKeyBuild.createRedisKey(
                 RedisKeyManage.TICKET_USER_LIST, ticketUserListDto.getUserId()), TicketUserVo.class);
         if (CollectionUtil.isNotEmpty(ticketUserVoList)) {
@@ -57,9 +63,9 @@ public class TicketUserService extends ServiceImpl<TicketUserMapper, TicketUser>
         LambdaQueryWrapper<TicketUser> ticketUserLambdaQueryWrapper = Wrappers.lambdaQuery(TicketUser.class)
                 .eq(TicketUser::getUserId, ticketUserListDto.getUserId());
         List<TicketUser> ticketUsers = ticketUserMapper.selectList(ticketUserLambdaQueryWrapper);
-        return BeanUtil.copyToList(ticketUsers,TicketUserVo.class);
+        return BeanUtil.copyToList(ticketUsers, TicketUserVo.class);
     }
-    
+
     @Transactional(rollbackFor = Exception.class)
     public void add(TicketUserDto ticketUserDto) {
         User user = userMapper.selectById(ticketUserDto.getUserId());
@@ -75,11 +81,12 @@ public class TicketUserService extends ServiceImpl<TicketUserMapper, TicketUser>
             throw new DaMaiFrameException(BaseCode.TICKET_USER_EXIST);
         }
         TicketUser addTicketUser = new TicketUser();
-        BeanUtil.copyProperties(ticketUserDto,addTicketUser);
+        BeanUtil.copyProperties(ticketUserDto, addTicketUser);
         addTicketUser.setId(uidGenerator.getUid());
         ticketUserMapper.insert(addTicketUser);
         delTicketUserVoListCache(String.valueOf(ticketUserDto.getUserId()));
     }
+
     @Transactional(rollbackFor = Exception.class)
     public void delete(TicketUserIdDto ticketUserIdDto) {
         TicketUser ticketUser = ticketUserMapper.selectById(ticketUserIdDto.getId());
@@ -89,8 +96,8 @@ public class TicketUserService extends ServiceImpl<TicketUserMapper, TicketUser>
         ticketUserMapper.deleteById(ticketUserIdDto.getId());
         delTicketUserVoListCache(String.valueOf(ticketUser.getUserId()));
     }
-    
-    public void delTicketUserVoListCache(String userId){
+
+    public void delTicketUserVoListCache(String userId) {
         redisCache.del(RedisKeyBuild.createRedisKey(RedisKeyManage.TICKET_USER_LIST, userId));
     }
 }

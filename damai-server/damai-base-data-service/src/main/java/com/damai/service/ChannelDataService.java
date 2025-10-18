@@ -22,47 +22,69 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 /**
- * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料 
+ * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料
  * @description: 渠道 service
  * @author: 阿星不是程序员
  **/
 @Service
 @Slf4j
 public class ChannelDataService {
-    
+
     @Autowired
     private ChannelDataMapper channelDataMapper;
-    
+
     @Autowired
     private UidGenerator uidGenerator;
-    
+
     @Autowired
-    private RedisCache redisCache; 
-    
-    public GetChannelDataVo getByCode(GetChannelDataByCodeDto dto){
+    private RedisCache redisCache;
+
+    /**
+     * 根据渠道编码获取渠道数据
+     *
+     * @param dto
+     * @return
+     */
+    public GetChannelDataVo getByCode(GetChannelDataByCodeDto dto) {
+        // 定义返回对象
         GetChannelDataVo getChannelDataVo = new GetChannelDataVo();
+        // 构造查询条件
         LambdaQueryWrapper<ChannelTableData> wrapper = Wrappers.lambdaQuery(ChannelTableData.class)
                 .eq(ChannelTableData::getStatus, Status.RUN.getCode())
-                .eq(ChannelTableData::getCode,dto.getCode());
+                .eq(ChannelTableData::getCode, dto.getCode());
+        // 执行数据库查询（简洁写法，不用if来判断空值）
         Optional.ofNullable(channelDataMapper.selectOne(wrapper)).ifPresent(channelData -> {
-            BeanUtils.copyProperties(channelData,getChannelDataVo);
+            // 将查询结果复制到返回对象
+            BeanUtils.copyProperties(channelData, getChannelDataVo);
         });
+        // 返回封装好的 VO 对象
         return getChannelDataVo;
     }
-    
+
+    /**
+     * 添加渠道数据
+     *
+     * @param channelDataAddDto
+     */
     @Transactional(rollbackFor = Exception.class)
     public void add(ChannelDataAddDto channelDataAddDto) {
         ChannelTableData channelData = new ChannelTableData();
-        BeanUtils.copyProperties(channelDataAddDto,channelData);
+        BeanUtils.copyProperties(channelDataAddDto, channelData);
         channelData.setId(uidGenerator.getUid());
         channelData.setCreateTime(DateUtils.now());
         channelDataMapper.insert(channelData);
         addRedisChannelData(channelData);
     }
-    
-    private void addRedisChannelData(ChannelTableData channelData){
+
+    /**
+     * 将渠道数据存到 redis
+     *
+     * @param channelData
+     */
+    private void addRedisChannelData(ChannelTableData channelData) {
         GetChannelDataVo getChannelDataVo = new GetChannelDataVo();
-        BeanUtils.copyProperties(channelData,getChannelDataVo);
-        redisCache.set(RedisKeyBuild.createRedisKey(RedisKeyManage.CHANNEL_DATA,getChannelDataVo.getCode()),getChannelDataVo);
+        BeanUtils.copyProperties(channelData, getChannelDataVo);
+        redisCache.set(RedisKeyBuild
+                .createRedisKey(RedisKeyManage.CHANNEL_DATA, getChannelDataVo.getCode()), getChannelDataVo);
     }
 }

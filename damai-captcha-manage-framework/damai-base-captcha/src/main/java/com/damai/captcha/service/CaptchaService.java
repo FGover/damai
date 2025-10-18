@@ -12,19 +12,21 @@ import com.damai.captcha.model.vo.CaptchaVO;
 import java.util.Properties;
 
 /**
- * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料 
+ * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料
  * @description: 验证码服务接口
  * @author: 阿星不是程序员
  **/
 public interface CaptchaService {
     /**
      * 配置初始化
+     *
      * @param config 配置
      */
     void init(Properties config);
 
     /**
      * 获取验证码
+     *
      * @param captchaVO 数据
      * @return 结果
      */
@@ -32,6 +34,7 @@ public interface CaptchaService {
 
     /**
      * 核对验证码(前端)
+     *
      * @param captchaVO 数据
      * @return 结果
      */
@@ -39,6 +42,7 @@ public interface CaptchaService {
 
     /**
      * 二次校验验证码(后端)
+     *
      * @param captchaVO 数据
      * @return 结果
      */
@@ -51,9 +55,10 @@ public interface CaptchaService {
      */
     String captchaType();
 
-	/**
-	 * 历史资源清除(过期的图片文件，生成的临时图片...)
-	 * @param config 配置项 控制资源清理的粒度
-	 */
-	void destroy(Properties config);
+    /**
+     * 历史资源清除(过期的图片文件，生成的临时图片...)
+     *
+     * @param config 配置项 控制资源清理的粒度
+     */
+    void destroy(Properties config);
 }

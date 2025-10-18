@@ -10,7 +10,13 @@ import static com.damai.initialize.constant.InitializeHandlerType.APPLICATION_PO
  * @author: 阿星不是程序员
  **/
 public abstract class AbstractApplicationPostConstructHandler implements InitializeHandler {
-    
+
+    /**
+     * 固定返回PostConstruct类型的初始化标识
+     * 无需子类重写，统一规范该类型处理器的类型标识
+     *
+     * @return
+     */
     @Override
     public String type() {
         return APPLICATION_POST_CONSTRUCT;

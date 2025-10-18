@@ -18,19 +18,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料 
+ * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料
  * @description: 所有规则 service
  * @author: 阿星不是程序员
  **/
 @Service
 public class AllRuleService {
-    
+
     @Autowired
     private RuleService ruleService;
-    
+
     @Autowired
     private DepthRuleService depthRuleService;
-    
+
     @Transactional(rollbackFor = Exception.class)
     public void add(final AllRuleDto allRuleDto) {
         ruleService.add(allRuleDto.getRuleDto());
@@ -39,14 +39,14 @@ public class AllRuleService {
         if (CollUtil.isNotEmpty(depthRuleDtoList)) {
             for (int i = 0; i < depthRuleDtoList.size(); i++) {
                 DepthRuleDto depthRuleDto = depthRuleDtoList.get(i);
-                checkTime(depthRuleDto.getStartTimeWindow(),depthRuleDto.getEndTimeWindow(),filterDepthRuleDtoList(depthRuleDtoList,i));
+                checkTime(depthRuleDto.getStartTimeWindow(), depthRuleDto.getEndTimeWindow(), filterDepthRuleDtoList(depthRuleDtoList, i));
                 depthRuleService.add(depthRuleDto);
             }
         }
         ruleService.saveAllRuleCache();
     }
-    
-    public void checkTime(String startTimeWindow, String endTimeWindow, List<DepthRuleDto> depthRuleDtoList){
+
+    public void checkTime(String startTimeWindow, String endTimeWindow, List<DepthRuleDto> depthRuleDtoList) {
         if (StringUtil.isEmpty(startTimeWindow) || StringUtil.isEmpty(endTimeWindow)) {
             return;
         }
@@ -54,10 +54,10 @@ public class AllRuleService {
             if (depthRuleDto.getStatus() != null) {
                 if (depthRuleDto.getStatus().equals(RuleStatus.RUN.getCode())) {
                     return true;
-                }else {
+                } else {
                     return false;
                 }
-            }else {
+            } else {
                 return true;
             }
         }).collect(Collectors.toList());
@@ -73,8 +73,8 @@ public class AllRuleService {
             }
         }
     }
-    
-    public List<DepthRuleDto> filterDepthRuleDtoList(List<DepthRuleDto> depthRuleDtoList, int coord){
+
+    public List<DepthRuleDto> filterDepthRuleDtoList(List<DepthRuleDto> depthRuleDtoList, int coord) {
         List<DepthRuleDto> fiterDepthRuleDtoList = new ArrayList<>();
         for (int i = 0; i < depthRuleDtoList.size(); i++) {
             if (i != coord) {
@@ -83,11 +83,12 @@ public class AllRuleService {
         }
         return fiterDepthRuleDtoList;
     }
-    public long getTimeWindowTimestamp(String timeWindow){
+
+    public long getTimeWindowTimestamp(String timeWindow) {
         String today = DateUtil.today();
         return DateUtil.parse(today + " " + timeWindow).getTime();
     }
-    
+
     public AllDepthRuleVo get() {
         AllDepthRuleVo allDepthRuleVo = new AllDepthRuleVo();
         allDepthRuleVo.setRuleVo(ruleService.get());

@@ -6,12 +6,18 @@ import static com.damai.initialize.constant.InitializeHandlerType.APPLICATION_CO
 import static com.damai.initialize.constant.InitializeHandlerType.APPLICATION_POST_CONSTRUCT;
 
 /**
- * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料 
- * @description: 用于处理 {@link CommandLineRunner} 类型 初始化执行 抽象
+ * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料
+ * @description: 用于处理 {@link CommandLineRunner} 类型 初始化执行 抽象基类
  * @author: 阿星不是程序员
  **/
 public abstract class AbstractApplicationCommandLineRunnerHandler implements InitializeHandler {
-    
+
+    /**
+     * 固定返回CommandLineRunner类型的初始化标识
+     * 无需子类重写，统一规范该类型处理器的类型标识
+     *
+     * @return
+     */
     @Override
     public String type() {
         return APPLICATION_COMMAND_LINE_RUNNER;

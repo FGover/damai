@@ -2,59 +2,93 @@ dataSources:
   ds_0:
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://127.0.0.1:3306/damai_user_0?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    jdbcUrl: jdbc:mysql://192.168.116.101:3306/damai_user_0?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: root
     password: root
   ds_1:
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://127.0.0.1:3306/damai_user_1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    jdbcUrl: jdbc:mysql://192.168.116.101:3306/damai_user_1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: root
     password: root
 
 rules:
+  # 分库分表规则
   - !SHARDING
     tables:
+      # 对 d_user_mobile 表进行分库分表
       d_user_mobile:
+        # 分为两个库，每个库都分为 d_user_mobile_0 和 d_user_mobile_1 表
         actualDataNodes: ds_${0..1}.d_user_mobile_${0..1}
+        # 分库策略
         databaseStrategy:
           standard:
+            # 使用 mobile 作为分片键
             shardingColumn: mobile
-            shardingAlgorithmName: databaseUserMobileHashModModel    
+            # 用 user_mobile 列使用 hash 取模作为分库算法
+            shardingAlgorithmName: databaseUserMobileHashModModel
+        # 分表策略
         tableStrategy:
           standard:
+            # 使用 mobile 作为分片键
             shardingColumn: mobile
+            # 用 user_mobile 列使用 hash 取模作为分表算法
             shardingAlgorithmName: tableUserMobileHashMod
+      # 对 d_user_email 表进行分库分表
       d_user_email:
+        # 分为两个库，每个库都分为 d_user_email_0 和 d_user_email_1 表
         actualDataNodes: ds_${0..1}.d_user_email_${0..1}
+        # 分库策略
         databaseStrategy:
           standard:
+            # 使用 email 作为分片键
             shardingColumn: email
-            shardingAlgorithmName: databaseUserEmailHashModModel     
+            # 用 user_email 列使用 hash 取模作为分库算法
+            shardingAlgorithmName: databaseUserEmailHashModModel
+        # 分表策略
         tableStrategy:
           standard:
+            # 使用 email 作为分片键
             shardingColumn: email
+            # 用 user_email 列使用 hash 取模作为分表算法
             shardingAlgorithmName: tableUserEmailHashMod
+      # 对 d_user 表进行分库分表
       d_user:
+        # 分为两个库，每个库都分为 d_user_0 和 d_user_1 表
         actualDataNodes: ds_${0..1}.d_user_${0..1}
+        # 分库策略
         databaseStrategy:
           standard:
+            # 使用 id 作为分片键
             shardingColumn: id
-            shardingAlgorithmName: databaseUserModModel    
+            # 用 user_id 列使用 hash 取模作为分库算法
+            shardingAlgorithmName: databaseUserModModel
+        # 分表策略
         tableStrategy:
           standard:
+            # 使用 id 作为分片键
             shardingColumn: id
+            # 用 user_id 列使用 hash 取模作为分表算法
             shardingAlgorithmName: tableUserModModel
+      # 对 d_ticket_user 表进行分库分表
       d_ticket_user:
+        # 分为两个库，每个库都分为 d_ticket_user_0 和 d_ticket_user_1 表
         actualDataNodes: ds_${0..1}.d_ticket_user_${0..1}
+        # 分库策略
         databaseStrategy:
           standard:
+            # 使用 user_id 作为分片键
             shardingColumn: user_id
-            shardingAlgorithmName: databaseTicketUserModModel     
+            # 用 user_id 列使用 hash 取模作为分库算法
+            shardingAlgorithmName: databaseTicketUserModModel
+        # 分表策略
         tableStrategy:
           standard:
+            # 使用 user_id 作为分片键
             shardingColumn: user_id
-            shardingAlgorithmName: tableTicketUserModModel    
+            # 用 user_id 列使用 hash 取模作为分表算法
+            shardingAlgorithmName: tableTicketUserModModel
+    # 具体的算法
     shardingAlgorithms:
       databaseUserMobileHashModModel:
         type: HASH_MOD
@@ -87,32 +121,49 @@ rules:
       tableTicketUserModModel:
         type: MOD
         props:
-          sharding-count: 2    
+          sharding-count: 2
+  # 加密规则
   - !ENCRYPT
     tables:
+      # d_user 表
       d_user:
         columns:
+          # 对 mobile 列进行加密
           mobile:
+            # 密文列 mobile
             cipherColumn: mobile
+            # 自定义的加密算法
             encryptorName: user_encryption_algorithm
+          # 对 password 列进行加密
           password:
+            # 密文列 password
             cipherColumn: password
+            # 自定义的加密算法
             encryptorName: user_encryption_algorithm
+          # 对 id_number 列进行加密
           id_number:
+            # 密文列 id_number
             cipherColumn: id_number
+            # 自定义的加密算法
             encryptorName: user_encryption_algorithm
+      # d_user_mobile 表
       d_user_mobile:
         columns:
+          # 对 mobile 列进行加密
           mobile:
+            # 密文列 mobile
             cipherColumn: mobile
+            # 自定义的加密算法
             encryptorName: user_encryption_algorithm
+    # 加密器
     encryptors:
       user_encryption_algorithm:
-        type: SM4
+        type: SM4   # 加密算法类型：国密SM4算法
         props:
-          sm4-key: d3ecdaa11d6ab89e1987870186073eaa
-          sm4-mode: CBC
-          sm4-iv: 1afc7fdce9ebc393f693cd3d23e35ed2
-          sm4-padding: PKCS7Padding
+          sm4-key: d3ecdaa11d6ab89e1987870186073eaa   # 密钥
+          sm4-mode: CBC    # 加密模式
+          sm4-iv: 1afc7fdce9ebc393f693cd3d23e35ed2  # 初始化向量
+          sm4-padding: PKCS7Padding   # 填充方式
 props:
+  # 打印真实 sql
   sql-show: true

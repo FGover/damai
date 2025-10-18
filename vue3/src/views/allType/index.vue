@@ -1,6 +1,6 @@
 <template>
   <!--详情-->
-  <Header></Header>
+  <Header :pageParams="pageParams"></Header>
   <div class="app-container">
     <div class="goods">共 <span>{{ goods }}</span>个商品</div>
     <div class="box-main">
@@ -18,11 +18,11 @@
                     <li v-show="isShow" v-for="(item,index) in cityArr.slice(0,22)" :key="item.id"
                         @click="cityClick(item,index)"
                     >
-                      <span v-if="item.name==currentCity" class="active">{{ item.name }}</span>
+                      <span v-if="item.name===currentCity" class="active">{{ item.name }}</span>
                       <span v-else>{{ item.name }}</span>
                     </li>
                     <li v-show="!isShow" v-for="(item,index) in cityArr" :key="item.id"
-                        @click="cityClick(item,index)" :class="{active: activeCityIndex == index}">{{ item.name }}
+                        @click="cityClick(item,index)" :class="{active: activeCityIndex === index}">{{ item.name }}
                     </li>
 
                   </ul>
@@ -42,8 +42,10 @@
                         @click="categoryClick(item,ind)"
                     >
                       <span v-if="$route.query.name==item.name" class="active">{{ item.name }}</span>
-                      <span v-if="$route.query.name!=item.name&&item.name=='全部'" :class="{active:isActive}">全部</span>
-                      <span v-if="$route.query.name!=item.name&&item.name!='全部'" :class="{active: activeIndex == ind}">{{
+                      <span v-if="$route.query.name!=item.name&&item.name=='全部'"
+                            :class="{active:isActive}">全部</span>
+                      <span v-if="$route.query.name!=item.name&&item.name!='全部'"
+                            :class="{active: activeIndex == ind}">{{
                           item.name
                         }}</span>
                     </li>
@@ -112,7 +114,8 @@
 
                       </div>
                       <div class="item-content" v-if="titleIsShow">艺人：{{ item.actor }}</div>
-                      <div class="item-content" v-if="!titleIsShow"><span>艺人：</span><span  v-html="item.actor"></span> </div>
+                      <div class="item-content" v-if="!titleIsShow"><span>艺人：</span><span v-html="item.actor"></span>
+                      </div>
 
                       <div class="item-content"> {{ item.areaName }} | {{ item.place }}</div>
                       <div class="item-content">{{ formatDateWithWeekday(item.showTime, item.showWeekTime) }}</div>
@@ -150,7 +153,8 @@
 
                       </div>
                       <div class="item-content" v-if="titleIsShow">艺人：{{ item.actor }}</div>
-                      <div class="item-content" v-if="!titleIsShow"><span>艺人：</span><span  v-html="item.actor"></span> </div>
+                      <div class="item-content" v-if="!titleIsShow"><span>艺人：</span><span v-html="item.actor"></span>
+                      </div>
                       <div class="item-content"> {{ item.areaName }} | {{ item.place }}</div>
                       <div class="item-content">{{ formatDateWithWeekday(item.showTime, item.showWeekTime) }}</div>
 
@@ -187,7 +191,8 @@
 
                       </div>
                       <div class="item-content" v-if="titleIsShow">艺人：{{ item.actor }}</div>
-                      <div class="item-content" v-if="!titleIsShow"><span>艺人：</span><span  v-html="item.actor"></span> </div>
+                      <div class="item-content" v-if="!titleIsShow"><span>艺人：</span><span v-html="item.actor"></span>
+                      </div>
                       <div class="item-content"> {{ item.areaName }} | {{ item.place }}</div>
                       <div class="item-content">{{ formatDateWithWeekday(item.showTime, item.showWeekTime) }}</div>
 
@@ -224,7 +229,8 @@
 
                       </div>
                       <div class="item-content" v-if="titleIsShow">艺人：{{ item.actor }}</div>
-                      <div class="item-content" v-if="!titleIsShow"><span>艺人：</span><span  v-html="item.actor"></span> </div>
+                      <div class="item-content" v-if="!titleIsShow"><span>艺人：</span><span v-html="item.actor"></span>
+                      </div>
                       <div class="item-content"> {{ item.areaName }} | {{ item.place }}</div>
                       <div class="item-content">{{ formatDateWithWeekday(item.showTime, item.showWeekTime) }}</div>
 
@@ -278,7 +284,7 @@
 import {getCurrentInstance, onMounted, reactive, ref} from 'vue'
 import {getCurrentCity, getOtherCity} from '@/api/area'
 import {getcategoryType} from "@/api/index";
-import {getCurrentDate, useMitt,formatDateWithWeekday} from "@/utils/index";
+import {getCurrentDate, useMitt, formatDateWithWeekday} from "@/utils/index";
 import {getChildrenType, getProgramPageType} from "@/api/allType";
 import {getProgramRecommendList} from "@/api/recommendlist.js"
 //引入路由器
@@ -402,7 +408,7 @@ const categoryClick = (item, ind) => {
     //推荐节目列表入参中的父节目类型字段
     recommendParams.parentProgramCategoryId = item.id;
     if (isActive.value == false) {
-        getChildrenTypeList()
+      getChildrenTypeList()
     }
     getList()
     getRecommendList()
@@ -507,7 +513,6 @@ onMounted(() => {
     cardArr.value = data.list
     total.value = Number(data.totalSize)
     titleIsShow.value = false
-
   })
 })
 
@@ -836,8 +841,9 @@ function removeTag(str, tag) {
 .search__item__info__price strong {
   color: rgba(255, 55, 29, 0.85); /* 价格字体颜色为红色 */
 }
-:deep(em){
- font-weight: bolder;
+
+:deep(em) {
+  font-weight: bolder;
   color: rgba(255, 55, 29, 0.85);
 
 }

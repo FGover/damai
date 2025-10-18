@@ -2,7 +2,7 @@ dataSources:
   ds_0:
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://127.0.0.1:3306/damai_program_0?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&autoReconnect=true
+    jdbcUrl: jdbc:mysql://192.168.116.101:3306/damai_program_0?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&autoReconnect=true
     username: root
     password: root
     hikari:
@@ -11,7 +11,7 @@ dataSources:
   ds_1:
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://127.0.0.1:3306/damai_program_1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&autoReconnect=true
+    jdbcUrl: jdbc:mysql://192.168.116.101:3306/damai_program_1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai&autoReconnect=true
     username: root
     password: root
     hikari:
@@ -20,58 +20,100 @@ dataSources:
 rules:
   - !SHARDING
     tables:
+      # 对 d_program 表进行分库分表
       d_program:
+        # damai_program 分为两个库，每个库中有两个 d_program 表
         actualDataNodes: ds_${0..1}.d_program_${0..1}
+        # 分库策略
         databaseStrategy:
           standard:
+            # 使用 id 作为分片键
             shardingColumn: id
+            # 使用 id 分库算法
             shardingAlgorithmName: databaseProgramModModel
+        # 分表策略
         tableStrategy:
           standard:
+            # 使用 id 作为分片键
             shardingColumn: id
+            # 使用 id 分表算法
             shardingAlgorithmName: tableProgramModModel
+      # 对 d_program_group 表进行分库分表
       d_program_group:
+        # damai_program 分为两个库，每个库中有两个 d_program_group 表
         actualDataNodes: ds_${0..1}.d_program_group_${0..1}
+        # 分库策略
         databaseStrategy:
           standard:
+            # 使用 id 作为分片键
             shardingColumn: id
+            # 使用 id 分库算法
             shardingAlgorithmName: databaseProgramGroupModModel
+        # 分表策略
         tableStrategy:
           standard:
+            # 使用 id 作为分片键
             shardingColumn: id
+            # 使用 id 分表算法
             shardingAlgorithmName: tableProgramGroupModModel
+      # 对 d_program_show_time 表进行分库分表
       d_program_show_time:
+        # damai_program 分为两个库，每个库中有两个 d_program_show_time 表
         actualDataNodes: ds_${0..1}.d_program_show_time_${0..1}
+        # 分库策略
         databaseStrategy:
           standard:
+            # 使用 program_id 作为分片键
             shardingColumn: program_id
+            # 使用 program_id 分库算法
             shardingAlgorithmName: databaseProgramShowTimeModModel
+        # 分表策略
         tableStrategy:
           standard:
+            # 使用 program_id 作为分片键
             shardingColumn: program_id
+            # 使用 program_id 分表算法
             shardingAlgorithmName: tableProgramShowTimeModModel
+      # 对 d_seat 表进行分库分表
       d_seat:
+        # damai_program 分为两个库，每个库中有两个 d_seat 表
         actualDataNodes: ds_${0..1}.d_seat_${0..1}
+        # 分库策略
         databaseStrategy:
           standard:
+            # 使用 program_id 作为分片键
             shardingColumn: program_id
+            # 使用 program_id 分库算法
             shardingAlgorithmName: databaseSeatModModel
+        # 分表策略
         tableStrategy:
           standard:
+            # 使用 program_id 作为分片键
             shardingColumn: program_id
+            # 使用 program_id 分表算法
             shardingAlgorithmName: tableSeatModModel
+      # 对 d_ticket_category 表进行分库分表
       d_ticket_category:
+        # damai_program 分为两个库，每个库中有两个 d_ticket_category 表
         actualDataNodes: ds_${0..1}.d_ticket_category_${0..1}
+        # 分库策略
         databaseStrategy:
           standard:
+            # 使用 program_id 作为分片键
             shardingColumn: program_id
+            # 使用 program_id 分库算法
             shardingAlgorithmName: databaseTicketCategoryModModel
+        # 分表策略
         tableStrategy:
           standard:
+            # 使用 program_id 作为分片键
             shardingColumn: program_id
-            shardingAlgorithmName: tableTicketCategoryModModel      
+            # 使用 program_id 分表算法
+            shardingAlgorithmName: tableTicketCategoryModModel
+    # 广播表
     broadcastTables:
       - d_program_category
+    # 具体的算法
     shardingAlgorithms:
       databaseProgramModModel:
         type: MOD

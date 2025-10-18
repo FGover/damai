@@ -12,19 +12,19 @@ public class RuleVo {
     
     private String id;
     
-    private Integer statTime;
+    private Integer statTime;  // 统计时间数值（统计请求次数的时间窗口，“在多久内”统计请求次数）
     
-    private Integer statTimeType;
+    private Integer statTimeType;  // 统计时间类型
     
-    private Integer threshold;
+    private Integer threshold;  // 调用限制阈值
+
+    private Integer effectiveTime;  // 限制时间数值（触发限流后，限制生效的时长）
     
-    private Integer effectiveTime;
+    private Integer effectiveTimeType;  // 限制时间类型
     
-    private Integer effectiveTimeType;
+    private String limitApi;  // 被限制的API路径列表
     
-    private String limitApi;
+    private String message;  // 返回的限制消息
     
-    private String message;
-    
-    private Integer status;
+    private Integer status;  // 状态标识
 }

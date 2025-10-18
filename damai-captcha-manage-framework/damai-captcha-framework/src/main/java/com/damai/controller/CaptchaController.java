@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料 
+ * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料
  * @description: 控制层
  * @author: 阿星不是程序员
  **/
@@ -33,7 +33,7 @@ public class CaptchaController {
 
     @PostMapping("/get")
     public ResponseModel get(@RequestBody CaptchaVO data, HttpServletRequest request) {
-        assert request.getRemoteHost()!=null;
+        assert request.getRemoteHost() != null;
         data.setBrowserInfo(getRemoteId(request));
         return captchaService.get(data);
     }
@@ -43,7 +43,7 @@ public class CaptchaController {
         data.setBrowserInfo(getRemoteId(request));
         return captchaService.check(data);
     }
-    
+
 
     public static String getRemoteId(HttpServletRequest request) {
         String xForward = request.getHeader("X-Forwarded-For");

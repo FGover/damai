@@ -99,7 +99,7 @@
 import logo from '@/assets/login/logo.png'
 import photo from '@/assets/login/photo.png'
 import document from '@/assets/login/document.jpeg'
-import {ref, reactive, onMounted, nextTick} from 'vue'
+import {ref, reactive, onMounted, nextTick, watch} from 'vue'
 import {getToken, getUserIdKey, removeToken, removeUserIdKey, removeName} from "../../utils/auth";
 import useUserStore from '@/store/modules/user'
 import {getPersonInfoId} from '@/api/personInfo'
@@ -127,9 +127,23 @@ const queryParams = ref({
   content: '',
   pageNumber: 1,
   pageSize: 10,
-  timeType: 0
+  timeType: 0,
+  areaId: '',
+  startDateTime: undefined,
+  endDateTime: undefined,
+  programCategoryId: '',
+  parentProgramCategoryId: '',
+  type: 1
 })
 const emits = defineEmits(['updateValue'])
+
+const props = defineProps({
+  pageParams: {
+    type: Object,
+    required: true
+  }
+})
+
 //初始化判断是否是登录界面，是否显示登录搜索等功能
 const path = route.path
 if (path == '/login') {
@@ -170,7 +184,7 @@ function getNickName() {
       let {name} = response.data
       isLoginToken.value = name
       if (isLoginToken.value && isLoginToken.value.length > 2) {
-        isLoginToken.value = isLoginToken.value.slice(0,2)+"..."
+        isLoginToken.value = isLoginToken.value.slice(0, 2) + "..."
       }
       isHasToken.value = true
     }
@@ -182,6 +196,14 @@ onMounted(() => {
   getHot()
   getOther()
 })
+
+watch(
+    () => props.pageParams,
+    (newObj) => {
+      console.log('哈哈哈哈', newObj)
+      Object.assign(queryParams.value, newObj)
+    }, {deep: true}
+);
 
 //当前城市
 function getCurrent() {
@@ -225,10 +247,11 @@ function getCityInfoList(params) {
     getOther()
   })
 }
+
 function getProgramSearchList() {
   queryParams.value.content = iptSearch.value
   getProgramSearch(queryParams.value).then(response => {
-    emitter.emit('searchList',response.data)
+    emitter.emit('searchList', response.data)
     router.push({path: "/allType/index"});
   })
 }

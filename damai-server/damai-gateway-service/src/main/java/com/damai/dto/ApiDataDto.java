@@ -14,30 +14,30 @@ public class ApiDataDto {
     
     private Long id;
     
-    private String headVersion;
+    private String headVersion;  // 请求头版本
+
+    private String apiAddress;  // 	API请求IP地址
     
-    private String apiAddress;
+    private String apiMethod;  // API请求方法
     
-    private String apiMethod;
+    private String apiBody;  // API请求体
     
-    private String apiBody;
+    private String apiParams;  // URL参数
     
-    private String apiParams;
+    private String apiUrl;  // API请求URL
     
-    private String apiUrl;
+    private Date createTime;  // 创建时间
     
-    private Date createTime;
+    private Integer status;  // 状态
+
+    private String callDayTime;  // 调用日期时间维度
+
+    private String callHourTime;  // 调用小时时间维度
     
-    private Integer status;
+    private String callMinuteTime;  // 调用分钟时间维度
     
-    private String callDayTime;
+    private String callSecondTime;  // 调用秒时间维度
     
-    private String callHourTime;
-    
-    private String callMinuteTime;
-    
-    private String callSecondTime;
-    
-    private Integer type;
+    private Integer type;  // 调用限流规则类型
     
 }

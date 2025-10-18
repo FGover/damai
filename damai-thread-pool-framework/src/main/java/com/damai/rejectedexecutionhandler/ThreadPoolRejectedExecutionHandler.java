@@ -10,13 +10,21 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @author: 阿星不是程序员
  **/
 public class ThreadPoolRejectedExecutionHandler {
-    
-    
+
+    /**
+     * 业务中断型拒绝策略，当任务被拒绝时直接抛出异常
+     * 适用于对任务提交成功率有严格要求的场景，需要上层调用者处理异常情况
+     */
     public static class BusinessAbortPolicy implements RejectedExecutionHandler {
 
         public BusinessAbortPolicy() {
         }
 
+        /**
+         * 任务被拒绝时的处理逻辑
+         * @param r the runnable task requested to be executed
+         * @param executor the executor attempting to execute this task
+         */
         @Override
         public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
 

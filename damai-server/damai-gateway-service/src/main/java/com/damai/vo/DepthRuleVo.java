@@ -14,29 +14,29 @@ public class DepthRuleVo {
     
     private String id;
     
-    private String startTimeWindow;
+    private String startTimeWindow;  // 限制生效的开始时间
+
+    private long startTimeWindowTimestamp;  // 起始时间（时间戳）
     
-    private long startTimeWindowTimestamp;
+    private String endTimeWindow;   // 限制生效的结束时间
     
-    private String endTimeWindow;
+    private long endTimeWindowTimestamp;  // 结束时间（时间戳）
     
-    private long endTimeWindowTimestamp;
+    private Integer statTime;  // 统计时间数值
     
-    private Integer statTime;
+    private Integer statTimeType;  // 统计时间类型
     
-    private Integer statTimeType;
+    private Integer threshold;  // 调用限制阈值
     
-    private Integer threshold;
+    private Integer effectiveTime;  // 限制时间数值，超过阈值后要禁止多久
     
-    private Integer effectiveTime;
+    private Integer effectiveTimeType;  // 限制时间类型
     
-    private Integer effectiveTimeType;
+    private String limitApi;  // 被限制的API路径列表
     
-    private String limitApi;
+    private String message;  // 限制提示信息
     
-    private String message;
-    
-    private Integer status;
+    private Integer status;  // 状态标识
     
     private Date createTime;
 }

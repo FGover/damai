@@ -10,7 +10,8 @@ import lombok.Data;
 @Data
 public class WorkDataCenterId {
 
+    // 工作机器ID
     private Long workId;
-    
+    // 数据中心ID
     private Long dataCenterId;
 }

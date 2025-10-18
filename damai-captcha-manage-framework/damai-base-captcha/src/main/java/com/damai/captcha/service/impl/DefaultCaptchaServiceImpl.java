@@ -16,11 +16,11 @@ import java.util.Properties;
 
 
 /**
- * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料 
+ * @program: 极度真实还原大麦网高并发实战项目。 添加 阿星不是程序员 微信，添加时备注 大麦 来获取项目的完整资料
  * @description: 默认实现
  * @author: 阿星不是程序员
  **/
-public class DefaultCaptchaServiceImpl extends AbstractCaptchaService{
+public class DefaultCaptchaServiceImpl extends AbstractCaptchaService {
 
     @Override
     public String captchaType() {
@@ -30,24 +30,24 @@ public class DefaultCaptchaServiceImpl extends AbstractCaptchaService{
     @Override
     public void init(Properties config) {
         for (String s : CaptchaServiceFactory.instances.keySet()) {
-            if(captchaType().equals(s)){
+            if (captchaType().equals(s)) {
                 continue;
             }
             getService(s).init(config);
         }
     }
 
-	@Override
-	public void destroy(Properties config) {
-		for (String s : CaptchaServiceFactory.instances.keySet()) {
-			if(captchaType().equals(s)){
-				continue;
-			}
-			getService(s).destroy(config);
-		}
-	}
+    @Override
+    public void destroy(Properties config) {
+        for (String s : CaptchaServiceFactory.instances.keySet()) {
+            if (captchaType().equals(s)) {
+                continue;
+            }
+            getService(s).destroy(config);
+        }
+    }
 
-	private CaptchaService getService(String captchaType){
+    private CaptchaService getService(String captchaType) {
         return CaptchaServiceFactory.instances.get(captchaType);
     }
 
